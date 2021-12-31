@@ -1,4 +1,6 @@
 import 'package:dicodingnews/articles.dart';
+import 'package:dicodingnews/article_web_view.dart';
+import 'package:dicodingnews/detail_page.dart';
 import 'package:flutter/material.dart';
  
 
@@ -7,6 +9,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,9 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity),
         initialRoute: NewsListPage.routeName,
         routes: {
-          NewsListPage.routeName: (context) => NewsListPage(),
+          NewsListPage.routeName: (context) => const NewsListPage(),
+          ArticleDetailPage.routeName: (context) => ArticleDetailPage(articles: ModalRoute.of(context)?.settings.arguments as Articles  ),
+          ArticleWebView.routeName: (context) => ArticleWebView(url: ModalRoute.of(context)?.settings.arguments as String)
         });
   }
 }
@@ -31,7 +36,7 @@ class NewsListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('News App'),
+        title: const Text('News App'),
       ),
       body: FutureBuilder<String>(
         future:
@@ -61,5 +66,6 @@ Widget _buildArticleItem(BuildContext context, Articles article) {
     ),
     title: Text(article.title),
     subtitle: Text(article.author),
+    onTap: () => Navigator.pushNamed(context, ArticleDetailPage.routeName, arguments: article),
   );
 }

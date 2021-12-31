@@ -39,6 +39,6 @@ List<Articles> parseArticles(String? json) {
       return [];
     }
     
-    final parsed = jsonDecode(json);
+    final List parsed = jsonDecode(json);
     return parsed.map((json) => Articles.fromJson(json)).toList();
 }
