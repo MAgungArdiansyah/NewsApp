@@ -19,4 +19,3 @@ class ArticleWebView extends StatelessWidget {
   }
 }
 
-//https://news.detik.com/berita/d-5878058/pesinetron-ca-ditangkap-terkait-prostitusi-muncikarinya-juga-dicokok?tag_from=wp_nhl_2

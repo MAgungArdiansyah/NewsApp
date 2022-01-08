@@ -18,7 +18,10 @@ class ArticleDetailPage extends StatelessWidget {
       body:  SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(articles.urlToImage),
+            Hero(
+              tag: articles.urlToImage,
+              child: Image.network(articles.urlToImage)
+            ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
