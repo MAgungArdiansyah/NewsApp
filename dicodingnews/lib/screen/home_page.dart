@@ -1,13 +1,15 @@
 import 'package:dicodingnews/model/marticles.dart';
+import 'package:dicodingnews/screen/settings.dart';
 import 'package:dicodingnews/widget/platform_widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'article_list_page.dart';
 import 'detail_page.dart';
 
 class NewsListPage extends StatefulWidget {
-  static const routeName = '/article_list';
+  static const routeName = '/home_page';
 
   const NewsListPage({Key? key}) : super(key: key);
 
@@ -16,60 +18,76 @@ class NewsListPage extends StatefulWidget {
 }
 
 class _NewsListPageState extends State<NewsListPage> {
+  int _bottomNavIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    int bottomNavIndex = 0;
+    List<Widget> _listWidget = [
+      ArticleListPage(),
+      SettingsPage(),
+    ];
+
+    List<BottomNavigationBarItem> _bottomNavBarItems = [
+      BottomNavigationBarItem(
+        icon: Icon(defaultTargetPlatform == TargetPlatform.iOS
+            ? CupertinoIcons.news
+            : Icons.public),
+        label: 'News',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(defaultTargetPlatform == TargetPlatform.iOS
+            ? CupertinoIcons.settings
+            : Icons.settings),
+        label: 'Settings',
+      ),
+    ];
 
     Widget _buildAndroid(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('News App'),
-        ),
-        body: bottomNavIndex == 0 ? ArticleListPage() : Placeholder(),
+        body: _listWidget[_bottomNavIndex],
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: bottomNavIndex,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.public), label: 'Headline'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.public), label: 'Headline'),
-          ],
-          onTap: (value) => setState(() {
-            bottomNavIndex = value;
+          currentIndex: _bottomNavIndex,
+          items: _bottomNavBarItems,
+          onTap: (index) => setState(() {
+            _bottomNavIndex = index;
+            print(_bottomNavIndex.toString());
           }),
         ),
       );
     }
 
-    return PlatformWidget(
-      androidBuilder: _buildAndroid,
-      iosBuilder: _buildIos,
-    );
+    Widget _buildIos(BuildContext context) {
+      return CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          items: _bottomNavBarItems
+        ),
+        tabBuilder: (context, index) {
+         return _listWidget[index];
+        },
+      );
+    }
+
+    return _buildIos(context);
   }
 }
 
 Widget _buildIos(BuildContext context) {
-  return CupertinoPageScaffold(
-    navigationBar: const CupertinoNavigationBar(
-      middle: Text('News App'),
-    ),
-    child: _buildList(context),
-  );
-}
-
-Widget _buildList(BuildContext context) {
-  return FutureBuilder<String>(
-    future:
-        // Untuk membaca string
-        DefaultAssetBundle.of(context).loadString('assets/articles.json'),
-    builder: (context, snapshot) {
-      final List<Articles> articles = parseArticles(snapshot.data);
-      return ListView.builder(
-        itemCount: articles.length,
-        itemBuilder: (context, index) {
-          return _buildArticleItem(context, articles[index]);
-        },
-      );
+  return CupertinoTabScaffold(
+    tabBar: CupertinoTabBar(items: [
+      BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.news), label: 'Headline'),
+      BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.settings), label: 'Settings'),
+    ]),
+    tabBuilder: (context, index) {
+      switch (index) {
+        case 0:
+          return ArticleListPage();
+        case 1:
+          return Placeholder();
+        default:
+          return Text('');
+      }
     },
   );
 }
