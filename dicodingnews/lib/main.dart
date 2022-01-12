@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(0))))),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            selectedItemColor: secondaryColor,
-            unselectedItemColor: Colors.grey,
+            selectedItemColor: Colors.red,
+            unselectedItemColor: Colors.green,
           ),
         ),
         initialRoute: NewsListPage.routeName,
